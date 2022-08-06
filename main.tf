@@ -61,7 +61,7 @@ resource "aws_instance" "web" {
   }
 
   provisioner "local-exec" {
-    command = "echo ${self.public_ip} > hosts"
+    command = "echo server_hostname: ${self.public_ip} >> /home/ubuntu/ansible-nginx/group_vars/all && echo ${self.public_ip} > hosts"
   }
 
   provisioner "local-exec" {
