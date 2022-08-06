@@ -1,0 +1,9 @@
+---
+- name: Install php extensions
+  apt:
+    name: "{{ item }}"
+    state: present
+  become: yes
+  with_items:
+    - php8.1-fpm
+    - php-mysql

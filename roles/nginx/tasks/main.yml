@@ -1,0 +1,32 @@
+---
+- name: Update Host
+  apt: 
+    update_cache: true
+  become: true
+
+- name: Install nginx latest version
+  become: true
+  apt: name=nginx state=present
+  
+- name: Start nginx
+  become: true
+  service: 
+    name: nginx
+    state: started
+
+- name: Update nginx default confs for html
+  template: "src=../templates/default.conf dest=/etc/nginx/sites-available/{{www_project}} owner=www-data group=www-data mode=0644"
+  become: yes
+
+- name: Delete default sites enabled
+  file: 
+    path: /etc/nginx/sites-enabled/default
+    state: absent
+  become: true
+
+- name: Enable site
+  file: src=/etc/nginx/sites-available/{{www_project}} dest=/etc/nginx/sites-enabled/{{www_project}} owner=www-data group=www-data state=link
+  notify: 
+    - restart nginx
+  become: yes
+
