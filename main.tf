@@ -3,7 +3,7 @@ locals {
   vpc_id = "vpc-06b65447cfc13ad97"
   ssh_user = "ubuntu"
   key_name = "LMSKey"
-  private_key_path = "/home/ubuntu/ansible-nginx/LMSKey.pem"
+  private_key_path = "/home/ubuntu/terraform-ansible-nginx/LMSKey.pem"
 }
 
 provider "aws" {
@@ -56,12 +56,13 @@ resource "aws_instance" "web" {
   provisioner "remote-exec" {
     inline = [
       	"echo ==========CONNECTED TO REMOTE SYSTEM===========",
+	"sudo apt update -y",
 	"touch /home/ubuntu/demo-file-from-terraform.txt"
     ]
   }
 
   provisioner "local-exec" {
-    command = "echo server_hostname: ${self.public_ip} >> /home/ubuntu/ansible-nginx/group_vars/all && echo ${self.public_ip} > hosts"
+    command = "echo server_hostname: ${self.public_ip} >> /home/ubuntu/terraform-ansible-nginx/group_vars/all && echo ${self.public_ip} > hosts"
   }
 
   provisioner "local-exec" {
